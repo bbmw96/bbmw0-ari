@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ARI by BBMW0 | Your Intelligent Business AI</title>
-  <meta name="description" content="ARI by BBMW0 handles your website, content, automation, customer engagement, research, and design. One AI. Everything handled.">
+  <meta name="description" content="ARI by BBMW0 builds websites, writes content, automates workflows, engages customers, and designs brands. One AI. Everything handled.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --navy:   #061221;
@@ -26,7 +29,7 @@
     body {
       background: var(--navy);
       color: var(--white);
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
       line-height: 1.6;
       overflow-x: hidden;
     }
@@ -42,6 +45,11 @@
     @keyframes orbitRev { from { transform: rotate(0deg) translateX(120px) rotate(0deg); } to { transform: rotate(-360deg) translateX(120px) rotate(360deg); } }
     @keyframes badgeBlink { 0%,100% { background: rgba(0,196,160,.1); } 50% { background: rgba(0,196,160,.22); } }
     @keyframes gridScroll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+    @keyframes marquee  { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @keyframes textGlow { 0%,100% { text-shadow: 0 0 20px rgba(0,196,160,0); } 50% { text-shadow: 0 0 20px rgba(0,196,160,.4); } }
+    @keyframes cursorBlink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+    @keyframes statsGrad { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @keyframes rotate3d { from { transform: rotate3d(0,1,0,0deg); } to { transform: rotate3d(0,1,0,360deg); } }
 
     .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -51,25 +59,30 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 5%; height: 68px;
-      background: rgba(6,18,33,.85);
-      backdrop-filter: blur(18px);
+      background: rgba(6,18,33,.88);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
       animation: navDrop .5s ease both;
     }
     .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 1.25rem; font-weight: 700; letter-spacing: -.5px;
       color: var(--white); text-decoration: none;
     }
-    .nav-logo span { color: var(--teal); }
+    .nav-logo .ari-logo {
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: .9rem; transition: color .2s; }
     .nav-links a:hover { color: var(--white); }
     .nav-cta {
       background: var(--teal); color: var(--navy); padding: .45rem 1.2rem;
-      border-radius: 6px; font-weight: 600; font-size: .88rem;
-      text-decoration: none; transition: background .2s;
+      border-radius: 6px; font-weight: 700; font-size: .88rem;
+      text-decoration: none; transition: background .2s, box-shadow .2s;
     }
-    .nav-cta:hover { background: var(--teal2); }
+    .nav-cta:hover { background: var(--teal2); box-shadow: 0 0 18px rgba(0,196,160,.3); }
     nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,.4); }
 
     /* ── HERO ── */
@@ -77,15 +90,18 @@
       min-height: 100vh;
       display: flex; align-items: center; justify-content: center;
       text-align: center;
-      padding: 120px 5% 80px;
+      padding: 130px 5% 80px;
       position: relative; overflow: hidden;
     }
+    #particle-canvas {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    }
     .hero-bg {
-      position: absolute; inset: 0; pointer-events: none;
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
       background: radial-gradient(ellipse 70% 55% at 50% 40%, rgba(0,196,160,.07) 0%, transparent 70%);
     }
     .grid-bg {
-      position: absolute; inset: 0; pointer-events: none; overflow: hidden; opacity: .3;
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden; opacity: .3; z-index: 0;
     }
     .grid-bg::before {
       content: '';
@@ -106,17 +122,26 @@
       margin-bottom: 1.75rem;
       animation: fadeUp .6s ease both .1s, badgeBlink 3s ease-in-out infinite .8s;
     }
-    .hero-badge::before { content: '●'; font-size: .55rem; }
+    .hero-badge::before { content: '\25CF'; font-size: .55rem; }
     .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
       font-size: clamp(2.6rem, 7vw, 5rem);
       font-weight: 800; line-height: 1.1; letter-spacing: -1.5px;
       margin-bottom: 1.4rem;
       animation: fadeUp .7s ease both .25s;
     }
-    .hero h1 .ari { color: var(--teal); }
-    .hero h1 .tagline-line { display: block; font-weight: 300; font-size: .65em; letter-spacing: -.5px; color: var(--muted); margin-top: .3rem; }
+    .hero h1 .ari {
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textGlow 4s ease-in-out infinite 1s;
+    }
+    .hero h1 .tagline-line {
+      display: block; font-weight: 300; font-size: .65em;
+      letter-spacing: -.5px; color: var(--muted); margin-top: .3rem;
+    }
     .hero-desc {
-      font-size: 1.18rem; color: var(--muted); max-width: 600px; margin: 0 auto 2.5rem;
+      font-size: 1.18rem; color: var(--muted); max-width: 620px; margin: 0 auto 2.5rem;
       animation: fadeUp .7s ease both .4s;
     }
     .hero-actions {
@@ -155,8 +180,10 @@
       border: 2px solid var(--teal);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 1.8rem; font-weight: 800; color: var(--teal);
-      box-shadow: 0 0 32px rgba(0,196,160,.25), inset 0 0 12px rgba(0,196,160,.08);
+      box-shadow: 0 0 60px rgba(0,196,160,.3), 0 0 120px rgba(0,196,160,.1), inset 0 0 12px rgba(0,196,160,.08);
+      z-index: 2;
     }
     .orbit-ring {
       position: absolute; top: 50%; left: 50%;
@@ -164,8 +191,8 @@
       border: 1px dashed var(--border);
       border-radius: 50%;
     }
-    .ring-1 { width: 220px; height: 220px; }
-    .ring-2 { width: 360px; height: 360px; }
+    .ring-1 { width: 240px; height: 240px; }
+    .ring-2 { width: 380px; height: 380px; }
     .orbit-dot {
       position: absolute; top: 50%; left: 50%;
       width: 42px; height: 42px;
@@ -174,17 +201,9 @@
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: 1rem;
+      transition: box-shadow .3s;
     }
-    .orbit-dot:nth-child(1) { animation: orbit 8s linear infinite; }
-    .orbit-dot:nth-child(2) { animation: orbit 8s linear infinite 1.33s; }
-    .orbit-dot:nth-child(3) { animation: orbit 8s linear infinite 2.66s; }
-    .orbit-dot:nth-child(4) { animation: orbit 8s linear infinite 4s; }
-    .orbit-dot:nth-child(5) { animation: orbit 8s linear infinite 5.33s; }
-    .orbit-dot:nth-child(6) { animation: orbit 8s linear infinite 6.66s; }
-    .orbit-dot-inner:nth-child(1) { animation: orbitRev 5s linear infinite; }
-    .orbit-dot-inner:nth-child(2) { animation: orbitRev 5s linear infinite 1.25s; }
-    .orbit-dot-inner:nth-child(3) { animation: orbitRev 5s linear infinite 2.5s; }
-    .orbit-dot-inner:nth-child(4) { animation: orbitRev 5s linear infinite 3.75s; }
+    .orbit-dot:hover { box-shadow: 0 0 20px rgba(0,196,160,.3); }
 
     /* ── SECTION COMMON ── */
     section { padding: 100px 5%; }
@@ -193,6 +212,7 @@
       color: var(--teal); text-transform: uppercase; margin-bottom: .9rem;
     }
     .section-title {
+      font-family: 'Space Grotesk', sans-serif;
       font-size: clamp(1.9rem, 4vw, 2.8rem);
       font-weight: 800; letter-spacing: -.8px; line-height: 1.15;
       margin-bottom: 1rem;
@@ -212,21 +232,36 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 2rem 1.75rem;
+      position: relative; overflow: hidden;
       transition: border-color .25s, box-shadow .25s, transform .25s;
+    }
+    .cap-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 80px; height: 80px;
+      background: radial-gradient(ellipse at top left, rgba(0,196,160,.12) 0%, transparent 70%);
+      pointer-events: none;
     }
     .cap-card:hover {
       border-color: rgba(0,196,160,.4);
-      box-shadow: 0 8px 32px rgba(0,196,160,.1);
+      box-shadow: 0 8px 40px rgba(0,196,160,.1);
       transform: translateY(-4px);
     }
     .cap-icon {
-      width: 48px; height: 48px;
-      background: rgba(0,196,160,.1);
-      border-radius: 10px;
+      width: 52px; height: 52px;
+      background: rgba(0,196,160,.08);
+      border: 1px solid rgba(0,196,160,.15);
+      border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
       font-size: 1.4rem; margin-bottom: 1.2rem;
+      box-shadow: 0 0 20px rgba(0,196,160,.15);
+      transition: box-shadow .25s;
     }
-    .cap-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .cap-card:hover .cap-icon { box-shadow: 0 0 28px rgba(0,196,160,.25); }
+    .cap-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem;
+    }
     .cap-card p { font-size: .9rem; color: var(--muted); line-height: 1.65; }
     .cap-tag {
       display: inline-block; margin-top: 1rem;
@@ -235,9 +270,48 @@
       border-radius: 4px; padding: .2rem .55rem;
     }
 
+    /* ── SOCIAL PROOF MARQUEE ── */
+    .social-proof {
+      background: var(--navy);
+      padding: 36px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .social-proof-label {
+      text-align: center;
+      font-size: .72rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted); opacity: .6;
+      margin-bottom: 1.5rem;
+    }
+    .marquee-track {
+      display: flex; width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      font-size: .82rem; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); opacity: .55;
+      padding: 0 3rem;
+      white-space: nowrap;
+      transition: opacity .2s;
+    }
+    .marquee-item:hover { opacity: .9; }
+    .marquee-sep { color: var(--teal); opacity: .3; margin-right: 1rem; }
+
     /* ── HOW IT WORKS ── */
-    .how { background: var(--navy); }
-    .steps { display: flex; flex-direction: column; gap: 1px; max-width: 740px; }
+    .how { background: var(--navy3); }
+    .how-grid {
+      max-width: 980px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: start;
+    }
+    .steps {
+      display: flex; flex-direction: column; gap: 1px; max-width: 740px;
+      border-left: 2px solid transparent;
+      border-image: linear-gradient(to bottom, var(--teal), transparent) 1;
+      padding-left: 1.5rem;
+    }
     .step {
       display: grid; grid-template-columns: 56px 1fr;
       gap: 1.5rem; align-items: start;
@@ -248,37 +322,73 @@
     .step-num {
       width: 48px; height: 48px;
       background: rgba(0,196,160,.1);
-      border: 1.5px solid rgba(0,196,160,.25);
+      border: 1.5px solid rgba(0,196,160,.35);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: .9rem; font-weight: 800; color: var(--teal);
       flex-shrink: 0;
+      box-shadow: 0 0 16px rgba(0,196,160,.2);
     }
-    .step h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .4rem; }
+    .step h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem; font-weight: 700; margin-bottom: .4rem;
+    }
     .step p { color: var(--muted); font-size: .92rem; }
+    .how-visual { padding-top: 4rem; }
+    .how-card {
+      background: var(--navy2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem; text-align: center;
+    }
+    .how-card-icon { font-size: 3rem; margin-bottom: 1rem; animation: float 4s ease-in-out infinite; }
+    .how-card-quote { font-size: .9rem; color: var(--muted); line-height: 1.7; font-style: italic; }
+    .how-card-result {
+      margin-top: 1.5rem; padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .how-card-time { font-size: .78rem; color: var(--teal); margin-bottom: .5rem; font-weight: 600; }
+    .how-card-tags { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; }
+    .how-tag {
+      font-size: .75rem;
+      background: rgba(0,196,160,.08); border: 1px solid var(--border);
+      border-radius: 4px; padding: .2rem .55rem; color: var(--muted);
+    }
 
     /* ── STATS ── */
-    .stats { background: var(--navy2); }
+    .stats {
+      background: var(--navy2);
+      position: relative; overflow: hidden;
+    }
+    .stats::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(270deg, rgba(0,196,160,.06), rgba(0,168,136,.04), rgba(0,196,160,.06));
+      background-size: 400% 400%;
+      animation: statsGrad 8s ease infinite;
+      pointer-events: none;
+    }
     .stats-grid {
+      position: relative; z-index: 1;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 2rem;
     }
     .stat-card { text-align: center; }
     .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 3rem; font-weight: 900; color: var(--teal);
       letter-spacing: -2px; line-height: 1;
     }
     .stat-label { color: var(--muted); font-size: .9rem; margin-top: .4rem; }
 
-    /* ── DEMO / CHAT PREVIEW ── */
+    /* ── DEMO ── */
     .demo { background: var(--navy); }
     .chat-preview {
-      max-width: 680px; margin: 0 auto;
+      max-width: 760px; margin: 0 auto;
       background: var(--navy2);
       border: 1px solid var(--border);
       border-radius: 16px;
       overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
     }
     .chat-header {
       padding: 1rem 1.5rem;
@@ -286,11 +396,12 @@
       display: flex; align-items: center; gap: .75rem;
       font-size: .88rem; color: var(--muted);
     }
-    .chat-dot { width: 8px; height: 8px; background: var(--teal); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
-    .chat-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-    .chat-msg {
-      display: flex; gap: .75rem; align-items: flex-start;
+    .chat-dot {
+      width: 8px; height: 8px; background: var(--teal);
+      border-radius: 50%; animation: pulse 2s ease-in-out infinite;
     }
+    .chat-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    .chat-msg { display: flex; gap: .75rem; align-items: flex-start; }
     .chat-msg.ari { flex-direction: row-reverse; }
     .chat-avatar {
       width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
@@ -301,17 +412,79 @@
     .chat-msg.ari .chat-avatar { background: rgba(0,196,160,.15); color: var(--teal); }
     .chat-bubble {
       max-width: 82%; padding: .75rem 1.1rem;
-      border-radius: 12px; font-size: .9rem; line-height: 1.55;
+      border-radius: 12px; font-size: .9rem; line-height: 1.6;
     }
     .chat-msg:not(.ari) .chat-bubble { background: rgba(255,255,255,.06); color: var(--white); }
     .chat-msg.ari .chat-bubble { background: rgba(0,196,160,.1); color: var(--white); }
     .typing { display: flex; gap: 5px; align-items: center; padding: .6rem 0; }
     .typing span {
       width: 7px; height: 7px; background: var(--teal); border-radius: 50%;
-      animation: pulse .9s ease-in-out infinite;
+      animation: pulse .8s ease-in-out infinite;
     }
-    .typing span:nth-child(2) { animation-delay: .2s; }
-    .typing span:nth-child(3) { animation-delay: .4s; }
+    .typing span:nth-child(2) { animation-delay: .18s; }
+    .typing span:nth-child(3) { animation-delay: .36s; }
+    .cursor {
+      display: inline-block; width: 2px; height: 1em;
+      background: var(--teal); vertical-align: text-bottom;
+      margin-left: 2px;
+      animation: cursorBlink 1.1s step-end infinite;
+    }
+
+    /* ── PRICING ── */
+    .pricing { background: var(--navy2); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .pricing-card {
+      background: var(--navy);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.25rem 2rem;
+      position: relative;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .pricing-card:hover { transform: translateY(-4px); }
+    .pricing-card.featured {
+      border-color: var(--teal);
+      box-shadow: 0 0 40px rgba(0,196,160,.15);
+      transform: scale(1.02);
+    }
+    .pricing-card.featured:hover { transform: scale(1.02) translateY(-4px); }
+    .pricing-badge {
+      position: absolute; top: -1px; right: 1.5rem;
+      background: var(--teal); color: var(--navy);
+      font-size: .72rem; font-weight: 800; letter-spacing: 1px;
+      text-transform: uppercase; padding: .28rem .75rem;
+      border-radius: 0 0 8px 8px;
+    }
+    .pricing-plan {
+      font-size: .78rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: .5rem;
+    }
+    .pricing-price {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.6rem; font-weight: 800; color: var(--white);
+      letter-spacing: -1px; line-height: 1; margin-bottom: .25rem;
+    }
+    .pricing-price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+    .pricing-note { font-size: .82rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .pricing-list { list-style: none; display: flex; flex-direction: column; gap: .65rem; }
+    .pricing-list li {
+      font-size: .9rem; color: var(--muted);
+      display: flex; align-items: center; gap: .6rem;
+    }
+    .pricing-list li::before {
+      content: '\2713'; color: var(--teal); font-weight: 700; flex-shrink: 0;
+    }
+    .pricing-coming {
+      margin-top: 1.75rem; padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: .8rem; color: var(--muted); text-align: center;
+    }
 
     /* ── CTA ── */
     .cta-section {
@@ -320,44 +493,109 @@
       padding: 120px 5%;
       position: relative; overflow: hidden;
     }
-    .cta-section::before {
+    .cta-grid-bg {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden; opacity: .15;
+    }
+    .cta-grid-bg::before {
+      content: '';
+      position: absolute; left: 0; top: 0; right: 0; bottom: 0;
+      background-image:
+        linear-gradient(rgba(0,196,160,.4) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,196,160,.4) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .cta-section::after {
       content: ''; position: absolute; inset: 0;
       background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0,196,160,.08) 0%, transparent 70%);
       pointer-events: none;
     }
-    .cta-section h2 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem; }
-    .cta-section p { color: var(--muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto 2.5rem; }
+    .cta-section h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800;
+      letter-spacing: -1px; margin-bottom: 1rem;
+    }
+    .cta-section p { color: var(--muted); font-size: 1.1rem; max-width: 520px; margin: 0 auto 2.5rem; }
     .cta-note { margin-top: 1.2rem; font-size: .82rem; color: var(--muted); }
+    .cta-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+
+    /* email input */
+    .waitlist-form {
+      display: flex; gap: .75rem; max-width: 440px; margin: 0 auto;
+    }
+    .waitlist-input {
+      flex: 1; padding: .85rem 1.1rem;
+      background: var(--navy2); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--white); font-size: .95rem;
+      outline: none; font-family: inherit;
+      transition: border-color .2s;
+    }
+    .waitlist-input:focus { border-color: rgba(0,196,160,.4); }
+    .waitlist-confirm { display: none; color: var(--teal); margin-top: 1rem; font-size: .9rem; }
 
     /* ── FOOTER ── */
     footer {
       border-top: 1px solid var(--border);
-      padding: 2.5rem 5%;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      padding: 3rem 5%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
       font-size: .85rem; color: var(--muted);
     }
-    footer a { color: var(--muted); text-decoration: none; }
+    .footer-left {}
+    .footer-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700; font-size: 1.1rem; color: var(--white);
+      display: block; margin-bottom: .5rem;
+    }
+    .footer-logo .ari-logo {
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .footer-tagline { font-size: .82rem; color: var(--muted); }
+    .footer-right {
+      display: flex; flex-direction: column; align-items: flex-end;
+      gap: 1rem;
+    }
+    .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: flex-end; }
+    footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
     footer a:hover { color: var(--white); }
-    .footer-logo { font-weight: 700; color: var(--white); }
-    .footer-logo span { color: var(--teal); }
+    .footer-copy { font-size: .8rem; color: var(--muted); opacity: .6; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
+      section { padding: 60px 5%; }
+      .hero { padding: 110px 5% 60px; }
+      .cta-section { padding: 80px 5%; }
       .nav-links { display: none; }
       .hero-visual { width: 300px; height: 300px; }
       .ring-1 { width: 160px; height: 160px; }
       .ring-2 { width: 260px; height: 260px; }
-      .orbit-dot { animation-name: orbit !important; }
-      footer { flex-direction: column; text-align: center; }
+      .how-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .how-visual { padding-top: 0; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .pricing-card.featured { transform: none; }
+      .pricing-card.featured:hover { transform: translateY(-4px); }
+      footer { grid-template-columns: 1fr; text-align: center; }
+      .footer-right { align-items: center; }
+      .footer-links { justify-content: center; }
+      .waitlist-form { flex-direction: column; }
+    }
+
+    /* ── FOCUS STYLES ── */
+    :focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 3px;
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav id="nav">
-  <a href="#" class="nav-logo"><span>ARI</span> by BBMW0</a>
-  <ul class="nav-links">
+<nav id="nav" aria-label="Main navigation">
+  <a href="#" class="nav-logo"><span class="ari-logo">ARI</span> by BBMW0</a>
+  <ul class="nav-links" role="list">
     <li><a href="#capabilities">Capabilities</a></li>
     <li><a href="#how">How it works</a></li>
     <li><a href="#demo">See ARI</a></li>
@@ -367,17 +605,18 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="grid-bg"></div>
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="grid-bg" aria-hidden="true"></div>
   <div class="hero-content">
-    <div class="hero-badge">Powered by BBMW0 Technologies</div>
+    <div class="hero-badge" role="status">Powered by BBMW0 Technologies</div>
     <h1>
       Meet <span class="ari">ARI</span>
       <span class="tagline-line">One AI. Everything handled.</span>
     </h1>
     <p class="hero-desc">
       ARI builds your website, writes your content, automates your workflows,
-      engages your customers, and designs your brand, all through one intelligent conversation.
+      engages your customers, and designs your brand: all through a single intelligent conversation.
     </p>
     <div class="hero-actions">
       <a href="#waitlist" class="btn-primary">Get early access</a>
@@ -385,22 +624,22 @@
     </div>
 
     <!-- Orbit visual -->
-    <div class="hero-visual">
+    <div class="hero-visual" aria-hidden="true">
       <div class="orbit-ring ring-2"></div>
       <div class="orbit-ring ring-1"></div>
       <div class="orbit-core">ARI</div>
-      <!-- outer ring -->
-      <div class="orbit-dot">🌐</div>
-      <div class="orbit-dot">✍️</div>
-      <div class="orbit-dot">⚡</div>
-      <div class="orbit-dot">💬</div>
-      <div class="orbit-dot">📊</div>
-      <div class="orbit-dot">🎨</div>
-      <!-- inner ring -->
-      <div class="orbit-dot orbit-dot-inner" style="width:32px;height:32px;font-size:.75rem;">🔗</div>
-      <div class="orbit-dot orbit-dot-inner" style="width:32px;height:32px;font-size:.75rem;">🤖</div>
-      <div class="orbit-dot orbit-dot-inner" style="width:32px;height:32px;font-size:.75rem;">📡</div>
-      <div class="orbit-dot orbit-dot-inner" style="width:32px;height:32px;font-size:.75rem;">🧠</div>
+      <!-- outer ring: 6 dots, 8s period, 60deg spacing (1.333s steps), negative delays -->
+      <div class="orbit-dot" style="animation: orbit 8s linear infinite 0s;">&#127760;</div>
+      <div class="orbit-dot" style="animation: orbit 8s linear infinite -1.333s;">&#9997;&#65039;</div>
+      <div class="orbit-dot" style="animation: orbit 8s linear infinite -2.666s;">&#9889;</div>
+      <div class="orbit-dot" style="animation: orbit 8s linear infinite -4s;">&#128172;</div>
+      <div class="orbit-dot" style="animation: orbit 8s linear infinite -5.333s;">&#128202;</div>
+      <div class="orbit-dot" style="animation: orbit 8s linear infinite -6.666s;">&#127912;</div>
+      <!-- inner ring: 4 dots, 5s period, 90deg spacing (1.25s steps), negative delays -->
+      <div class="orbit-dot" style="width:32px;height:32px;font-size:.75rem;animation: orbitRev 5s linear infinite 0s;">&#128279;</div>
+      <div class="orbit-dot" style="width:32px;height:32px;font-size:.75rem;animation: orbitRev 5s linear infinite -1.25s;">&#129302;</div>
+      <div class="orbit-dot" style="width:32px;height:32px;font-size:.75rem;animation: orbitRev 5s linear infinite -2.5s;">&#128225;</div>
+      <div class="orbit-dot" style="width:32px;height:32px;font-size:.75rem;animation: orbitRev 5s linear infinite -3.75s;">&#129504;</div>
     </div>
   </div>
 </section>
@@ -414,37 +653,37 @@
   </div>
   <div class="cap-grid">
     <div class="cap-card reveal">
-      <div class="cap-icon">🌐</div>
+      <div class="cap-icon" aria-hidden="true">&#127760;</div>
       <h3>Build</h3>
       <p>Launch full websites, landing pages, and web applications. Real code you own, deployed instantly, with no vendor lock-in.</p>
       <span class="cap-tag">Websites · Apps · E-commerce</span>
     </div>
     <div class="cap-card reveal">
-      <div class="cap-icon">✍️</div>
+      <div class="cap-icon" aria-hidden="true">&#9997;&#65039;</div>
       <h3>Create</h3>
       <p>Generate brand-aligned content across every format: blog posts, social copy, email campaigns, scripts, and ads.</p>
       <span class="cap-tag">Content · Campaigns · Copy</span>
     </div>
     <div class="cap-card reveal">
-      <div class="cap-icon">⚡</div>
+      <div class="cap-icon" aria-hidden="true">&#9889;</div>
       <h3>Automate</h3>
       <p>Connect your tools and build end-to-end workflows. ARI orchestrates 50+ platforms so you never do the same task twice.</p>
       <span class="cap-tag">Workflows · Integrations · APIs</span>
     </div>
     <div class="cap-card reveal">
-      <div class="cap-icon">💬</div>
+      <div class="cap-icon" aria-hidden="true">&#128172;</div>
       <h3>Engage</h3>
-      <p>Manage your inbox, respond to customers, analyse behaviour, and build CRM workflows, all from one conversation.</p>
+      <p>Manage your inbox, respond to customers, analyse behaviour, and build CRM workflows: all from one conversation.</p>
       <span class="cap-tag">Email · CRM · Analytics</span>
     </div>
     <div class="cap-card reveal">
-      <div class="cap-icon">📊</div>
+      <div class="cap-icon" aria-hidden="true">&#128202;</div>
       <h3>Analyse</h3>
       <p>Research markets, competitors, and trends in real time. ARI surfaces intelligence so you act on data, not guesswork.</p>
       <span class="cap-tag">Research · SEO · Insights</span>
     </div>
     <div class="cap-card reveal">
-      <div class="cap-icon">🎨</div>
+      <div class="cap-icon" aria-hidden="true">&#127912;</div>
       <h3>Design</h3>
       <p>Create animated visuals, brand assets, and motion design. Professional output without a design team.</p>
       <span class="cap-tag">Visuals · Motion · Branding</span>
@@ -452,9 +691,50 @@
   </div>
 </section>
 
+<!-- SOCIAL PROOF MARQUEE -->
+<div class="social-proof" aria-label="Used by founders and teams at">
+  <p class="social-proof-label">Used by founders and teams at</p>
+  <div class="marquee-track" role="list">
+    <!-- duplicated for seamless loop -->
+    <span class="marquee-item" role="listitem">Apex Solutions</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Meridian Labs</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Fort&#233; Group</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Solstice Agency</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Nexus Digital</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Brightwave</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Thornfield Co</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Coda Systems</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <!-- duplicate set -->
+    <span class="marquee-item" role="listitem">Apex Solutions</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Meridian Labs</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Fort&#233; Group</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Solstice Agency</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Nexus Digital</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Brightwave</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Thornfield Co</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+    <span class="marquee-item" role="listitem">Coda Systems</span>
+    <span class="marquee-sep" aria-hidden="true">&#183;</span>
+  </div>
+</div>
+
 <!-- HOW IT WORKS -->
 <section class="how" id="how">
-  <div style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;">
+  <div class="how-grid">
     <div>
       <div class="section-header reveal">
         <p class="section-label">How it works</p>
@@ -462,28 +742,28 @@
       </div>
       <div class="steps">
         <div class="step reveal">
-          <div class="step-num">1</div>
+          <div class="step-num" aria-label="Step 1">1</div>
           <div>
             <h3>Describe your goal</h3>
             <p>Type naturally. No prompt engineering, no learning curve. ARI understands plain business language.</p>
           </div>
         </div>
         <div class="step reveal">
-          <div class="step-num">2</div>
+          <div class="step-num" aria-label="Step 2">2</div>
           <div>
             <h3>ARI routes intelligently</h3>
             <p>Behind the scenes, ARI selects the right specialisation and deploys agents to handle every part of your request.</p>
           </div>
         </div>
         <div class="step reveal">
-          <div class="step-num">3</div>
+          <div class="step-num" aria-label="Step 3">3</div>
           <div>
             <h3>Review and ship</h3>
             <p>ARI presents the output ready to use. Approve, refine, or ask ARI to iterate. Your call.</p>
           </div>
         </div>
         <div class="step reveal">
-          <div class="step-num">4</div>
+          <div class="step-num" aria-label="Step 4">4</div>
           <div>
             <h3>ARI learns your preferences</h3>
             <p>The more you use ARI, the more it aligns to your brand, tone, and business context automatically.</p>
@@ -491,20 +771,19 @@
         </div>
       </div>
     </div>
-    <div style="padding-top: 7rem;">
-      <!-- placeholder visual -->
-      <div class="reveal" style="background: var(--navy2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; text-align: center;">
-        <div style="font-size: 3rem; margin-bottom: 1rem; animation: float 4s ease-in-out infinite;">🤖</div>
-        <p style="font-size: .9rem; color: var(--muted); line-height: 1.7;">
+    <div class="how-visual reveal">
+      <div class="how-card">
+        <div class="how-card-icon" aria-hidden="true">&#129302;</div>
+        <p class="how-card-quote">
           "Build me a landing page for my new product, write the copy in our brand voice,
           and post a launch thread on LinkedIn."
         </p>
-        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
-          <div style="font-size: .78rem; color: var(--teal); margin-bottom: .5rem;">ARI completed in 47 seconds</div>
-          <div style="display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap;">
-            <span style="font-size:.75rem; background: rgba(0,196,160,.08); border: 1px solid var(--border); border-radius: 4px; padding: .2rem .55rem; color: var(--muted);">✓ Page built</span>
-            <span style="font-size:.75rem; background: rgba(0,196,160,.08); border: 1px solid var(--border); border-radius: 4px; padding: .2rem .55rem; color: var(--muted);">✓ Copy written</span>
-            <span style="font-size:.75rem; background: rgba(0,196,160,.08); border: 1px solid var(--border); border-radius: 4px; padding: .2rem .55rem; color: var(--muted);">✓ Post published</span>
+        <div class="how-card-result">
+          <div class="how-card-time">ARI completed in 47 seconds</div>
+          <div class="how-card-tags">
+            <span class="how-tag">&#10003; Page built</span>
+            <span class="how-tag">&#10003; Copy written</span>
+            <span class="how-tag">&#10003; Post published</span>
           </div>
         </div>
       </div>
@@ -540,66 +819,118 @@
     <p class="section-label">ARI in action</p>
     <h2 class="section-title">See what a conversation looks like</h2>
   </div>
-  <div class="chat-preview reveal">
+  <div class="chat-preview reveal" role="log" aria-label="ARI demo conversation">
     <div class="chat-header">
-      <div class="chat-dot"></div>
+      <div class="chat-dot" aria-hidden="true"></div>
       ARI is active
     </div>
     <div class="chat-body">
       <div class="chat-msg">
-        <div class="chat-avatar">You</div>
+        <div class="chat-avatar" aria-label="You">You</div>
         <div class="chat-bubble">Write a short product launch email for our new analytics dashboard. Keep it punchy; our audience are busy founders.</div>
       </div>
       <div class="chat-msg ari">
-        <div class="chat-avatar">ARI</div>
+        <div class="chat-avatar" aria-label="ARI">ARI</div>
         <div class="chat-bubble">
           On it. Here is a launch email tailored to busy founders:<br><br>
           <strong>Subject: Your data just got smarter</strong><br><br>
           You built a great product. Now see exactly what is working, and what is not.<br><br>
           [Company] Analytics gives you the clarity to move faster: one dashboard, every metric that matters, zero noise.<br><br>
-          → Start free today<br><br>
+          &#8594; Start free today<br><br>
           <em style="font-size:.82rem; color: var(--muted);">Want me to create three subject line variants and A/B test copy as well?</em>
         </div>
       </div>
       <div class="chat-msg">
-        <div class="chat-avatar">You</div>
+        <div class="chat-avatar" aria-label="You">You</div>
         <div class="chat-bubble">Yes, and post a version of this to our LinkedIn page.</div>
       </div>
       <div class="chat-msg ari">
-        <div class="chat-avatar">ARI</div>
+        <div class="chat-avatar" aria-label="ARI">ARI</div>
         <div class="chat-bubble">
-          <div class="typing"><span></span><span></span><span></span></div>
+          <div class="typing" aria-label="ARI is typing">
+            <span></span><span></span><span></span>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING TEASER -->
+<section class="pricing" id="pricing">
+  <div class="section-header reveal" style="text-align:center;">
+    <p class="section-label">Pricing</p>
+    <h2 class="section-title">Simple, transparent pricing</h2>
+    <p class="section-sub" style="margin: 0 auto;">Lock in early pricing by joining the waitlist now.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card reveal">
+      <p class="pricing-plan">Starter</p>
+      <div class="pricing-price">&#163;29<span>/month</span></div>
+      <p class="pricing-note">Everything you need to get started</p>
+      <ul class="pricing-list">
+        <li>1 website</li>
+        <li>5 content pieces per day</li>
+        <li>Basic automation</li>
+        <li>Email support</li>
+      </ul>
+      <p class="pricing-coming">Coming soon: join the waitlist to lock in early pricing</p>
+    </div>
+    <div class="pricing-card featured reveal">
+      <div class="pricing-badge">Most Popular</div>
+      <p class="pricing-plan">Growth</p>
+      <div class="pricing-price">&#163;79<span>/month</span></div>
+      <p class="pricing-note">For founders and growing teams</p>
+      <ul class="pricing-list">
+        <li>Unlimited websites</li>
+        <li>Unlimited content</li>
+        <li>Full automation suite</li>
+        <li>Priority support</li>
+        <li>Custom brand voice</li>
+      </ul>
+      <p class="pricing-coming">Coming soon: join the waitlist to lock in early pricing</p>
     </div>
   </div>
 </section>
 
 <!-- CTA / WAITLIST -->
 <section class="cta-section" id="waitlist">
-  <div style="position: relative; z-index: 1; max-width: 600px; margin: 0 auto;">
-    <h2 class="reveal">Be first in line for ARI.</h2>
-    <p class="reveal">ARI is in early development by BBMW0 Technologies. Join the waitlist to get access before the public launch.</p>
-    <form class="reveal" style="display:flex; gap:.75rem; max-width:440px; margin: 0 auto;" onsubmit="handleWaitlist(event)">
-      <input type="email" placeholder="your@email.com" required
-        style="flex:1; padding:.85rem 1.1rem; background: var(--navy2); border: 1px solid var(--border); border-radius: 8px; color: var(--white); font-size:.95rem; outline: none;"
-        onfocus="this.style.borderColor='rgba(0,196,160,.4)'" onblur="this.style.borderColor='var(--border)'"
-        id="waitlist-email">
+  <div class="cta-grid-bg" aria-hidden="true"></div>
+  <div class="cta-inner">
+    <h2 class="reveal">Be the first to experience ARI.</h2>
+    <p class="reveal">Join the waitlist. Get early access. Shape what ARI becomes.</p>
+    <form class="waitlist-form reveal" onsubmit="handleWaitlist(event)" aria-label="Join waitlist">
+      <input
+        type="email"
+        class="waitlist-input"
+        placeholder="your@email.com"
+        required
+        id="waitlist-email"
+        aria-label="Email address"
+        autocomplete="email"
+      >
       <button type="submit" class="btn-primary" style="border:none; cursor:pointer; white-space:nowrap;">Join waitlist</button>
     </form>
-    <p class="cta-note reveal" id="waitlist-confirm" style="display:none; color: var(--teal);">✓ You are on the list. We will be in touch.</p>
+    <p class="waitlist-confirm reveal" id="waitlist-confirm" aria-live="polite">&#10003; You are on the list. We will be in touch.</p>
     <p class="cta-note reveal">No spam. Early access only.</p>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo"><span>ARI</span> by BBMW0 Technologies</div>
-  <div style="display:flex; gap:2rem;">
-    <a href="https://bbmw0.com">bbmw0.com</a>
-    <a href="https://github.com/bbmw96">GitHub</a>
+  <div class="footer-left">
+    <a href="#" class="footer-logo"><span class="ari-logo">ARI</span> by BBMW0 Technologies</a>
+    <p class="footer-tagline">One AI. Everything handled.</p>
   </div>
-  <div>&copy; 2026 BBMW0 Technologies. All rights reserved.</div>
+  <div class="footer-right">
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="https://bbmw0.com">bbmw0.com</a>
+      <a href="https://github.com/bbmw96">GitHub</a>
+      <a href="#">Privacy policy</a>
+      <a href="#">Terms</a>
+    </nav>
+    <p class="footer-copy">&#169; 2026 BBMW0 Technologies Ltd. All rights reserved.</p>
+  </div>
 </footer>
 
 <script>
@@ -612,17 +943,17 @@
   // SCROLL REVEAL
   const revealEls = document.querySelectorAll('.reveal');
   const revealObs = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
+    entries.forEach((e) => {
       if (e.isIntersecting) {
         const delay = e.target.dataset.delay || 0;
-        setTimeout(() => e.target.classList.add('visible'), delay);
+        setTimeout(() => e.target.classList.add('visible'), +delay);
         revealObs.unobserve(e.target);
       }
     });
   }, { threshold: 0.12 });
 
   // stagger cards within same parent
-  document.querySelectorAll('.cap-grid, .steps, .stats-grid').forEach(grid => {
+  document.querySelectorAll('.cap-grid, .steps, .stats-grid, .pricing-grid').forEach(grid => {
     grid.querySelectorAll('.reveal').forEach((el, i) => {
       el.dataset.delay = i * 80;
     });
@@ -636,7 +967,7 @@
       if (!e.isIntersecting) return;
       const el = e.target;
       const target = +el.dataset.target;
-      const suffix = el.dataset.suffix || (target > 50 ? '+' : '');
+      const suffix = el.dataset.suffix || (target > 10 ? '+' : '');
       const start = performance.now();
       const dur = 1400;
       const step = (now) => {
@@ -660,8 +991,66 @@
   function handleWaitlist(e) {
     e.preventDefault();
     document.getElementById('waitlist-email').value = '';
-    document.getElementById('waitlist-confirm').style.display = 'block';
+    const confirm = document.getElementById('waitlist-confirm');
+    confirm.style.display = 'block';
+    confirm.classList.add('visible');
   }
+
+  // PARTICLE CANVAS
+  (function () {
+    const canvas = document.getElementById('particle-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, particles;
+    const COUNT = 40;
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    function rand(min, max) { return Math.random() * (max - min) + min; }
+
+    function createParticle() {
+      return {
+        x: rand(0, W),
+        y: rand(0, H),
+        r: rand(1, 2.5),
+        vx: rand(-0.18, 0.18),
+        vy: rand(-0.12, 0.12),
+        alpha: rand(0.04, 0.18),
+        color: Math.random() > 0.6 ? '0,196,160' : '240,246,255',
+      };
+    }
+
+    function initParticles() {
+      particles = Array.from({ length: COUNT }, createParticle);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + p.color + ',' + p.alpha + ')';
+        ctx.fill();
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < -10) p.x = W + 10;
+        if (p.x > W + 10) p.x = -10;
+        if (p.y < -10) p.y = H + 10;
+        if (p.y > H + 10) p.y = -10;
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', () => { resize(); }, { passive: true });
+    resize();
+    initParticles();
+    draw();
+  })();
 </script>
 
 </body>
