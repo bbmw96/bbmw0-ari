@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARI by BBMW0 — Your Intelligent Business AI</title>
+  <meta name="description" content="ARI handles your website, content, automation, customer engagement, research, and design. One AI. Everything handled.">
+  <style>
+    :root {
+      --navy:   #061221;
+      --navy2:  #0a1c30;
+      --navy3:  #0f2540;
+      --teal:   #00c4a0;
+      --teal2:  #00a888;
+      --gold:   #c9a84c;
+      --white:  #f0f6ff;
+      --muted:  #7a9ab5;
+      --border: rgba(0,196,160,.14);
+      --glow:   rgba(0,196,160,.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp   { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes navDrop  { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes float    { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    @keyframes pulse    { 0%,100% { opacity: .5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.04); } }
+    @keyframes shimmer  { from { background-position: 200% center; } to { background-position: -200% center; } }
+    @keyframes orbit    { from { transform: rotate(0deg) translateX(180px) rotate(0deg); } to { transform: rotate(360deg) translateX(180px) rotate(-360deg); } }
+    @keyframes orbitRev { from { transform: rotate(0deg) translateX(120px) rotate(0deg); } to { transform: rotate(-360deg) translateX(120px) rotate(360deg); } }
+    @keyframes badgeBlink { 0%,100% { background: rgba(0,196,160,.1); } 50% { background: rgba(0,196,160,.22); } }
+    @keyframes gridScroll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+      background: rgba(6,18,33,.85);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      animation: navDrop .5s ease both;
+    }
+    .nav-logo {
+      font-size: 1.25rem; font-weight: 700; letter-spacing: -.5px;
+      color: var(--white); text-decoration: none;
+    }
+    .nav-logo span { color: var(--teal); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: .9rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      background: var(--teal); color: var(--navy); padding: .45rem 1.2rem;
+      border-radius: 6px; font-weight: 600; font-size: .88rem;
+      text-decoration: none; transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--teal2); }
+    nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,.4); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 5% 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 70% 55% at 50% 40%, rgba(0,196,160,.07) 0%, transparent 70%);
+    }
+    .grid-bg {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden; opacity: .3;
+    }
+    .grid-bg::before {
+      content: '';
+      position: absolute; left: 0; top: 0; right: 0;
+      height: 200%;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridScroll 18s linear infinite;
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 860px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(0,196,160,.1); border: 1px solid rgba(0,196,160,.25);
+      border-radius: 100px; padding: .35rem 1rem;
+      font-size: .82rem; color: var(--teal); font-weight: 500;
+      margin-bottom: 1.75rem;
+      animation: fadeUp .6s ease both .1s, badgeBlink 3s ease-in-out infinite .8s;
+    }
+    .hero-badge::before { content: '●'; font-size: .55rem; }
+    .hero h1 {
+      font-size: clamp(2.6rem, 7vw, 5rem);
+      font-weight: 800; line-height: 1.1; letter-spacing: -1.5px;
+      margin-bottom: 1.4rem;
+      animation: fadeUp .7s ease both .25s;
+    }
+    .hero h1 .ari { color: var(--teal); }
+    .hero h1 .tagline-line { display: block; font-weight: 300; font-size: .65em; letter-spacing: -.5px; color: var(--muted); margin-top: .3rem; }
+    .hero-desc {
+      font-size: 1.18rem; color: var(--muted); max-width: 600px; margin: 0 auto 2.5rem;
+      animation: fadeUp .7s ease both .4s;
+    }
+    .hero-actions {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp .7s ease both .55s;
+    }
+    .btn-primary {
+      display: inline-block; padding: .9rem 2.2rem;
+      background: linear-gradient(120deg, var(--teal) 0%, var(--teal2) 40%, var(--teal) 100%);
+      background-size: 250% auto;
+      color: var(--navy); font-weight: 700; font-size: 1rem;
+      border-radius: 8px; text-decoration: none;
+      transition: background-position .5s ease, box-shadow .2s;
+    }
+    .btn-primary:hover { background-position: right center; box-shadow: 0 0 28px rgba(0,196,160,.35); }
+    .btn-secondary {
+      display: inline-block; padding: .9rem 2.2rem;
+      border: 1.5px solid var(--border); color: var(--white);
+      font-weight: 600; font-size: 1rem; border-radius: 8px;
+      text-decoration: none; transition: border-color .2s, color .2s;
+    }
+    .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* orbit visual */
+    .hero-visual {
+      margin-top: 5rem;
+      position: relative; width: 420px; height: 420px;
+      margin-left: auto; margin-right: auto;
+      animation: fadeIn 1.2s ease both .7s;
+    }
+    .orbit-core {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90px; height: 90px;
+      background: linear-gradient(135deg, var(--navy3) 0%, #112233 100%);
+      border: 2px solid var(--teal);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; font-weight: 800; color: var(--teal);
+      box-shadow: 0 0 32px rgba(0,196,160,.25), inset 0 0 12px rgba(0,196,160,.08);
+    }
+    .orbit-ring {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px dashed var(--border);
+      border-radius: 50%;
+    }
+    .ring-1 { width: 220px; height: 220px; }
+    .ring-2 { width: 360px; height: 360px; }
+    .orbit-dot {
+      position: absolute; top: 50%; left: 50%;
+      width: 42px; height: 42px;
+      background: var(--navy2);
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .orbit-dot:nth-child(1) { animation: orbit 8s linear infinite; }
+    .orbit-dot:nth-child(2) { animation: orbit 8s linear infinite 1.33s; }
+    .orbit-dot:nth-child(3) { animation: orbit 8s linear infinite 2.66s; }
+    .orbit-dot:nth-child(4) { animation: orbit 8s linear infinite 4s; }
+    .orbit-dot:nth-child(5) { animation: orbit 8s linear infinite 5.33s; }
+    .orbit-dot:nth-child(6) { animation: orbit 8s linear infinite 6.66s; }
+    .orbit-dot-inner:nth-child(1) { animation: orbitRev 5s linear infinite; }
+    .orbit-dot-inner:nth-child(2) { animation: orbitRev 5s linear infinite 1.25s; }
+    .orbit-dot-inner:nth-child(3) { animation: orbitRev 5s linear infinite 2.5s; }
+    .orbit-dot-inner:nth-child(4) { animation: orbitRev 5s linear infinite 3.75s; }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 100px 5%; }
+    .section-label {
+      font-size: .78rem; font-weight: 700; letter-spacing: 2px;
+      color: var(--teal); text-transform: uppercase; margin-bottom: .9rem;
+    }
+    .section-title {
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      font-weight: 800; letter-spacing: -.8px; line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 560px; }
+    .section-header { margin-bottom: 3.5rem; }
+
+    /* ── CAPABILITIES ── */
+    .capabilities { background: var(--navy2); }
+    .cap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .cap-card {
+      background: var(--navy);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem 1.75rem;
+      transition: border-color .25s, box-shadow .25s, transform .25s;
+    }
+    .cap-card:hover {
+      border-color: rgba(0,196,160,.4);
+      box-shadow: 0 8px 32px rgba(0,196,160,.1);
+      transform: translateY(-4px);
+    }
+    .cap-icon {
+      width: 48px; height: 48px;
+      background: rgba(0,196,160,.1);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 1.2rem;
+    }
+    .cap-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .cap-card p { font-size: .9rem; color: var(--muted); line-height: 1.65; }
+    .cap-tag {
+      display: inline-block; margin-top: 1rem;
+      font-size: .75rem; font-weight: 600; color: var(--teal);
+      background: rgba(0,196,160,.08); border: 1px solid rgba(0,196,160,.18);
+      border-radius: 4px; padding: .2rem .55rem;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how { background: var(--navy); }
+    .steps { display: flex; flex-direction: column; gap: 1px; max-width: 740px; }
+    .step {
+      display: grid; grid-template-columns: 56px 1fr;
+      gap: 1.5rem; align-items: start;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      width: 48px; height: 48px;
+      background: rgba(0,196,160,.1);
+      border: 1.5px solid rgba(0,196,160,.25);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem; font-weight: 800; color: var(--teal);
+      flex-shrink: 0;
+    }
+    .step h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .4rem; }
+    .step p { color: var(--muted); font-size: .92rem; }
+
+    /* ── STATS ── */
+    .stats { background: var(--navy2); }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+    .stat-card { text-align: center; }
+    .stat-num {
+      font-size: 3rem; font-weight: 900; color: var(--teal);
+      letter-spacing: -2px; line-height: 1;
+    }
+    .stat-label { color: var(--muted); font-size: .9rem; margin-top: .4rem; }
+
+    /* ── DEMO / CHAT PREVIEW ── */
+    .demo { background: var(--navy); }
+    .chat-preview {
+      max-width: 680px; margin: 0 auto;
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .chat-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: .75rem;
+      font-size: .88rem; color: var(--muted);
+    }
+    .chat-dot { width: 8px; height: 8px; background: var(--teal); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+    .chat-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    .chat-msg {
+      display: flex; gap: .75rem; align-items: flex-start;
+    }
+    .chat-msg.ari { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .78rem; font-weight: 700;
+    }
+    .chat-msg:not(.ari) .chat-avatar { background: rgba(255,255,255,.1); color: var(--muted); }
+    .chat-msg.ari .chat-avatar { background: rgba(0,196,160,.15); color: var(--teal); }
+    .chat-bubble {
+      max-width: 82%; padding: .75rem 1.1rem;
+      border-radius: 12px; font-size: .9rem; line-height: 1.55;
+    }
+    .chat-msg:not(.ari) .chat-bubble { background: rgba(255,255,255,.06); color: var(--white); }
+    .chat-msg.ari .chat-bubble { background: rgba(0,196,160,.1); color: var(--white); }
+    .typing { display: flex; gap: 5px; align-items: center; padding: .6rem 0; }
+    .typing span {
+      width: 7px; height: 7px; background: var(--teal); border-radius: 50%;
+      animation: pulse .9s ease-in-out infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: .2s; }
+    .typing span:nth-child(3) { animation-delay: .4s; }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: linear-gradient(135deg, var(--navy2) 0%, #081a2c 100%);
+      text-align: center;
+      padding: 120px 5%;
+      position: relative; overflow: hidden;
+    }
+    .cta-section::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0,196,160,.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem; }
+    .cta-section p { color: var(--muted); font-size: 1.1rem; max-width: 500px; margin: 0 auto 2.5rem; }
+    .cta-note { margin-top: 1.2rem; font-size: .82rem; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 5%;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      font-size: .85rem; color: var(--muted);
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+    .footer-logo { font-weight: 700; color: var(--white); }
+    .footer-logo span { color: var(--teal); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero-visual { width: 300px; height: 300px; }
+      .ring-1 { width: 160px; height: 160px; }
+      .ring-2 { width: 260px; height: 260px; }
+      .orbit-dot { animation-name: orbit !important; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo"><span>ARI</span> by BBMW0</a>
+  <ul class="nav-links">
+    <li><a href="#capabilities">Capabilities</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#demo">See ARI</a></li>
+  </ul>
+  <a href="#waitlist" class="nav-cta">Get early access</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="grid-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Powered by BBMW0 Technologies</div>
+    <h1>
+      Meet <span class="ari">ARI</span>
+      <span class="tagline-line">One AI. Everything handled.</span>
+    </h1>
+    <p class="hero-desc">
+      ARI builds your website, writes your content, automates your workflows,
+      engages your customers, and designs your brand — all through one intelligent conversation.
+    </p>
+    <div class="hero-actions">
+      <a href="#waitlist" class="btn-primary">Get early access</a>
+      <a href="#demo" class="btn-secondary">See how it works</a>
+    </div>
+
+    <!-- Orbit visual -->
+    <div class="hero-visual">
+      <div class="orbit-ring ring-2"></div>
+      <div class="orbit-ring ring-1"></div>
+      <div class="orbit-core">ARI</div>
+      <!-- outer ring -->
+      <div class="orbit-dot">🌐</div>
+      <div class="orbit-dot">✍️</div>
+      <div class="orbit-dot">⚡</div>
+      <div class="orbit-dot">💬</div>
+      <div class="orbit-dot">📊</div>
+      <div class="orbit-dot">🎨</div>
+      <!-- inner ring -->
+      <div class="orbit-dot orbit-dot-inner" style="width:32px;height:32px;font-size:.75rem;">🔗</div>
+      <div class="orbit-dot orbit-dot-inner" style="width:32px;height:32px;font-size:.75rem;">🤖</div>
+      <div class="orbit-dot orbit-dot-inner" style="width:32px;height:32px;font-size:.75rem;">📡</div>
+      <div class="orbit-dot orbit-dot-inner" style="width:32px;height:32px;font-size:.75rem;">🧠</div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="capabilities" id="capabilities">
+  <div class="section-header reveal">
+    <p class="section-label">What ARI does</p>
+    <h2 class="section-title">Six capabilities.<br>Infinite applications.</h2>
+    <p class="section-sub">Ask ARI anything. It routes your request to the right specialisation automatically.</p>
+  </div>
+  <div class="cap-grid">
+    <div class="cap-card reveal">
+      <div class="cap-icon">🌐</div>
+      <h3>Build</h3>
+      <p>Launch full websites, landing pages, and web applications. Real code you own, deployed instantly — no vendor lock-in.</p>
+      <span class="cap-tag">Websites · Apps · E-commerce</span>
+    </div>
+    <div class="cap-card reveal">
+      <div class="cap-icon">✍️</div>
+      <h3>Create</h3>
+      <p>Generate brand-aligned content across every format: blog posts, social copy, email campaigns, scripts, and ads.</p>
+      <span class="cap-tag">Content · Campaigns · Copy</span>
+    </div>
+    <div class="cap-card reveal">
+      <div class="cap-icon">⚡</div>
+      <h3>Automate</h3>
+      <p>Connect your tools and build end-to-end workflows. ARI orchestrates 50+ platforms so you never do the same task twice.</p>
+      <span class="cap-tag">Workflows · Integrations · APIs</span>
+    </div>
+    <div class="cap-card reveal">
+      <div class="cap-icon">💬</div>
+      <h3>Engage</h3>
+      <p>Manage your inbox, respond to customers, analyse behaviour, and build CRM workflows — all from one conversation.</p>
+      <span class="cap-tag">Email · CRM · Analytics</span>
+    </div>
+    <div class="cap-card reveal">
+      <div class="cap-icon">📊</div>
+      <h3>Analyse</h3>
+      <p>Research markets, competitors, and trends in real time. ARI surfaces intelligence so you act on data, not guesswork.</p>
+      <span class="cap-tag">Research · SEO · Insights</span>
+    </div>
+    <div class="cap-card reveal">
+      <div class="cap-icon">🎨</div>
+      <h3>Design</h3>
+      <p>Create animated visuals, brand assets, and motion design. Professional output without a design team.</p>
+      <span class="cap-tag">Visuals · Motion · Branding</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;">
+    <div>
+      <div class="section-header reveal">
+        <p class="section-label">How it works</p>
+        <h2 class="section-title">Tell ARI what you need. It handles the rest.</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-num">1</div>
+          <div>
+            <h3>Describe your goal</h3>
+            <p>Type naturally. No prompt engineering, no learning curve. ARI understands plain business language.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">2</div>
+          <div>
+            <h3>ARI routes intelligently</h3>
+            <p>Behind the scenes, ARI selects the right specialisation and deploys agents to handle every part of your request.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">3</div>
+          <div>
+            <h3>Review and ship</h3>
+            <p>ARI presents the output ready to use. Approve, refine, or ask ARI to iterate — your call.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">4</div>
+          <div>
+            <h3>ARI learns your preferences</h3>
+            <p>The more you use ARI, the more it aligns to your brand, tone, and business context automatically.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding-top: 7rem;">
+      <!-- placeholder visual -->
+      <div class="reveal" style="background: var(--navy2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: 1rem; animation: float 4s ease-in-out infinite;">🤖</div>
+        <p style="font-size: .9rem; color: var(--muted); line-height: 1.7;">
+          "Build me a landing page for my new product, write the copy in our brand voice,
+          and post a launch thread on LinkedIn."
+        </p>
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+          <div style="font-size: .78rem; color: var(--teal); margin-bottom: .5rem;">ARI completed in 47 seconds</div>
+          <div style="display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap;">
+            <span style="font-size:.75rem; background: rgba(0,196,160,.08); border: 1px solid var(--border); border-radius: 4px; padding: .2rem .55rem; color: var(--muted);">✓ Page built</span>
+            <span style="font-size:.75rem; background: rgba(0,196,160,.08); border: 1px solid var(--border); border-radius: 4px; padding: .2rem .55rem; color: var(--muted);">✓ Copy written</span>
+            <span style="font-size:.75rem; background: rgba(0,196,160,.08); border: 1px solid var(--border); border-radius: 4px; padding: .2rem .55rem; color: var(--muted);">✓ Post published</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat-card reveal">
+      <div class="stat-num" data-target="6">0</div>
+      <div class="stat-label">Core capabilities</div>
+    </div>
+    <div class="stat-card reveal">
+      <div class="stat-num" data-target="50">0</div>
+      <div class="stat-label">Integrated platforms</div>
+    </div>
+    <div class="stat-card reveal">
+      <div class="stat-num" data-target="284">0</div>
+      <div class="stat-label">Specialist agents</div>
+    </div>
+    <div class="stat-card reveal">
+      <div class="stat-num" data-target="1">0</div>
+      <div class="stat-label">Conversation to rule them all</div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO / CHAT PREVIEW -->
+<section class="demo" id="demo">
+  <div class="section-header reveal" style="text-align:center; margin-bottom: 3rem;">
+    <p class="section-label">ARI in action</p>
+    <h2 class="section-title">See what a conversation looks like</h2>
+  </div>
+  <div class="chat-preview reveal">
+    <div class="chat-header">
+      <div class="chat-dot"></div>
+      ARI is active
+    </div>
+    <div class="chat-body">
+      <div class="chat-msg">
+        <div class="chat-avatar">You</div>
+        <div class="chat-bubble">Write a short product launch email for our new analytics dashboard. Keep it punchy — our audience are busy founders.</div>
+      </div>
+      <div class="chat-msg ari">
+        <div class="chat-avatar">ARI</div>
+        <div class="chat-bubble">
+          On it. Here is a launch email tailored to busy founders:<br><br>
+          <strong>Subject: Your data just got smarter</strong><br><br>
+          You built a great product. Now see exactly what is working — and what is not.<br><br>
+          [Company] Analytics gives you the clarity to move faster: one dashboard, every metric that matters, zero noise.<br><br>
+          → Start free today<br><br>
+          <em style="font-size:.82rem; color: var(--muted);">Want me to create three subject line variants and A/B test copy as well?</em>
+        </div>
+      </div>
+      <div class="chat-msg">
+        <div class="chat-avatar">You</div>
+        <div class="chat-bubble">Yes — and post a version of this to our LinkedIn page.</div>
+      </div>
+      <div class="chat-msg ari">
+        <div class="chat-avatar">ARI</div>
+        <div class="chat-bubble">
+          <div class="typing"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / WAITLIST -->
+<section class="cta-section" id="waitlist">
+  <div style="position: relative; z-index: 1; max-width: 600px; margin: 0 auto;">
+    <h2 class="reveal">Be first in line for ARI.</h2>
+    <p class="reveal">ARI is in early development by BBMW0 Technologies. Join the waitlist to get access before the public launch.</p>
+    <form class="reveal" style="display:flex; gap:.75rem; max-width:440px; margin: 0 auto;" onsubmit="handleWaitlist(event)">
+      <input type="email" placeholder="your@email.com" required
+        style="flex:1; padding:.85rem 1.1rem; background: var(--navy2); border: 1px solid var(--border); border-radius: 8px; color: var(--white); font-size:.95rem; outline: none;"
+        onfocus="this.style.borderColor='rgba(0,196,160,.4)'" onblur="this.style.borderColor='var(--border)'"
+        id="waitlist-email">
+      <button type="submit" class="btn-primary" style="border:none; cursor:pointer; white-space:nowrap;">Join waitlist</button>
+    </form>
+    <p class="cta-note reveal" id="waitlist-confirm" style="display:none; color: var(--teal);">✓ You are on the list. We will be in touch.</p>
+    <p class="cta-note reveal">No spam. Early access only.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><span>ARI</span> by BBMW0 Technologies</div>
+  <div style="display:flex; gap:2rem;">
+    <a href="https://bbmw0.com">bbmw0.com</a>
+    <a href="https://github.com/bbmw96">GitHub</a>
+  </div>
+  <div>&copy; 2026 BBMW0 Technologies. All rights reserved.</div>
+</footer>
+
+<script>
+  // NAV SCROLL SHADOW
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 30);
+  }, { passive: true });
+
+  // SCROLL REVEAL
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        const delay = e.target.dataset.delay || 0;
+        setTimeout(() => e.target.classList.add('visible'), delay);
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  // stagger cards within same parent
+  document.querySelectorAll('.cap-grid, .steps, .stats-grid').forEach(grid => {
+    grid.querySelectorAll('.reveal').forEach((el, i) => {
+      el.dataset.delay = i * 80;
+    });
+  });
+
+  revealEls.forEach(el => revealObs.observe(el));
+
+  // STAT COUNTERS
+  const counterObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = +el.dataset.target;
+      const suffix = el.dataset.suffix || (target > 50 ? '+' : '');
+      const start = performance.now();
+      const dur = 1400;
+      const step = (now) => {
+        const t = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(ease * target) + suffix;
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+      counterObs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+    const t = +el.dataset.target;
+    el.dataset.suffix = t > 10 ? '+' : '';
+    counterObs.observe(el);
+  });
+
+  // WAITLIST FORM
+  function handleWaitlist(e) {
+    e.preventDefault();
+    document.getElementById('waitlist-email').value = '';
+    document.getElementById('waitlist-confirm').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
